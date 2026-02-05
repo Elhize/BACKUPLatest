@@ -41,8 +41,9 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import SearchIcon from "@mui/icons-material/Search";
 import KeyIcon from "@mui/icons-material/Key";
 import API_BASE_URL from "../apiConfig";
-import CampaignIcon from "@mui/icons-material/Campaign";
+import CampaignIcon from '@mui/icons-material/Campaign';
 import { Toc } from "@mui/icons-material";
+
 
 const AssignScheduleToApplicants = () => {
   const socket = useRef(null);
@@ -52,8 +53,8 @@ const AssignScheduleToApplicants = () => {
   const [subtitleColor, setSubtitleColor] = useState("#555555");
   const [borderColor, setBorderColor] = useState("#000000");
   const [mainButtonColor, setMainButtonColor] = useState("#1976d2");
-  const [subButtonColor, setSubButtonColor] = useState("#ffffff"); // ✅ NEW
-  const [stepperColor, setStepperColor] = useState("#000000"); // ✅ NEW
+  const [subButtonColor, setSubButtonColor] = useState("#ffffff");   // ✅ NEW
+  const [stepperColor, setStepperColor] = useState("#000000");       // ✅ NEW
 
   const [fetchedLogo, setFetchedLogo] = useState(null);
   const [companyName, setCompanyName] = useState("");
@@ -72,10 +73,9 @@ const AssignScheduleToApplicants = () => {
     if (settings.title_color) setTitleColor(settings.title_color);
     if (settings.subtitle_color) setSubtitleColor(settings.subtitle_color);
     if (settings.border_color) setBorderColor(settings.border_color);
-    if (settings.main_button_color)
-      setMainButtonColor(settings.main_button_color);
-    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color); // ✅ NEW
-    if (settings.stepper_color) setStepperColor(settings.stepper_color); // ✅ NEW
+    if (settings.main_button_color) setMainButtonColor(settings.main_button_color);
+    if (settings.sub_button_color) setSubButtonColor(settings.sub_button_color);   // ✅ NEW
+    if (settings.stepper_color) setStepperColor(settings.stepper_color);           // ✅ NEW
 
     // 🏫 Logo
     if (settings.logo_url) {
@@ -88,47 +88,36 @@ const AssignScheduleToApplicants = () => {
     if (settings.company_name) setCompanyName(settings.company_name);
     if (settings.short_term) setShortTerm(settings.short_term);
     if (settings.campus_address) setCampusAddress(settings.campus_address);
+
   }, [settings]);
 
   const tabs = [
-    {
-      label: "Room Registration",
-      to: "/room_registration",
-      icon: <KeyIcon fontSize="large" />,
-    },
-    {
-      label: "Entrance Exam Room Assignment",
-      to: "/assign_entrance_exam",
-      icon: <MeetingRoomIcon fontSize="large" />,
-    },
-    {
-      label: "Entrance Exam Schedule Management",
-      to: "/assign_schedule_applicant",
-      icon: <ScheduleIcon fontSize="large" />,
-    },
-    {
-      label: "Proctor's Applicant List",
-      to: "/admission_schedule_room_list",
-      icon: <PeopleIcon fontSize="large" />,
-    },
-    {
-      label: "Announcement",
-      to: "/announcement_for_admission",
-      icon: <CampaignIcon fontSize="large" />,
-    },
+
+
+    { label: "Room Registration", to: "/room_registration", icon: <KeyIcon fontSize="large" /> },
+    { label: "Entrance Exam Room Assignment", to: "/assign_entrance_exam", icon: <MeetingRoomIcon fontSize="large" /> },
+    { label: "Entrance Exam Schedule Management", to: "/assign_schedule_applicant", icon: <ScheduleIcon fontSize="large" /> },
+    { label: "Proctor's Applicant List", to: "/admission_schedule_room_list", icon: <PeopleIcon fontSize="large" /> },
+    { label: "Announcement", to: "/announcement_for_admission", icon: <CampaignIcon fontSize="large" /> },
+
+
+
+
+
   ];
+
 
   const location = useLocation();
   const navigate = useNavigate();
   const [activeStep, setActiveStep] = useState(2);
-  const [clickedSteps, setClickedSteps] = useState(
-    Array(tabs.length).fill(false),
-  );
+  const [clickedSteps, setClickedSteps] = useState(Array(tabs.length).fill(false));
+
 
   const handleStepClick = (index, to) => {
     setActiveStep(index);
     navigate(to); // this will actually change the page
   };
+
 
   const [applicants, setApplicants] = useState([]);
   const [selectedSchedule, setSelectedSchedule] = useState("");
@@ -147,7 +136,7 @@ const AssignScheduleToApplicants = () => {
     extension: "",
     emailAddress: "",
     program: "",
-    created_at: "",
+    created_at: ""
   });
   const [selectedApplicantStatus, setSelectedApplicantStatus] = useState("");
   const [curriculumOptions, setCurriculumOptions] = useState([]);
@@ -161,6 +150,7 @@ const AssignScheduleToApplicants = () => {
   const [employeeID, setEmployeeID] = useState("");
 
   useEffect(() => {
+
     const storedUser = localStorage.getItem("email");
     const storedRole = localStorage.getItem("role");
     const storedID = localStorage.getItem("person_id");
@@ -184,16 +174,14 @@ const AssignScheduleToApplicants = () => {
 
   const checkAccess = async (employeeID) => {
     try {
-      const response = await axios.get(
-        `${API_BASE_URL}/api/page_access/${employeeID}/${pageId}`,
-      );
+      const response = await axios.get(`${API_BASE_URL}/api/page_access/${employeeID}/${pageId}`);
       if (response.data && response.data.page_privilege === 1) {
         setHasAccess(true);
       } else {
         setHasAccess(false);
       }
     } catch (error) {
-      console.error("Error checking access:", error);
+      console.error('Error checking access:', error);
       setHasAccess(false);
       if (error.response && error.response.data.message) {
         console.log(error.response.data.message);
@@ -218,35 +206,39 @@ const AssignScheduleToApplicants = () => {
     fetchCurriculums();
   }, []);
 
+
   useEffect(() => {
-    axios.get(`${API_BASE_URL}/api/applied_program`).then((res) => {
-      setAllCurriculums(res.data);
-      setCurriculumOptions(res.data);
-    });
+    axios.get(`${API_BASE_URL}/api/applied_program`)
+      .then(res => {
+        setAllCurriculums(res.data);
+        setCurriculumOptions(res.data);
+      });
   }, []);
+
 
   const [allCurriculums, setAllCurriculums] = useState([]);
   const [schoolYears, setSchoolYears] = useState([]);
   const [semesters, setSchoolSemester] = useState([]);
   const [selectedSchoolYear, setSelectedSchoolYear] = useState("");
-  const [selectedSchoolSemester, setSelectedSchoolSemester] = useState("");
-  const [selectedActiveSchoolYear, setSelectedActiveSchoolYear] = useState("");
+  const [selectedSchoolSemester, setSelectedSchoolSemester] = useState('');
+  const [selectedActiveSchoolYear, setSelectedActiveSchoolYear] = useState('');
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}/get_school_year/`)
       .then((res) => setSchoolYears(res.data))
       .catch((err) => console.error(err));
-  }, []);
+  }, [])
 
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}/get_school_semester/`)
       .then((res) => setSchoolSemester(res.data))
       .catch((err) => console.error(err));
-  }, []);
+  }, [])
 
   useEffect(() => {
+
     axios
       .get(`${API_BASE_URL}/active_school_year`)
       .then((res) => {
@@ -256,6 +248,7 @@ const AssignScheduleToApplicants = () => {
         }
       })
       .catch((err) => console.error(err));
+
   }, []);
 
   const handleSchoolYearChange = (event) => {
@@ -266,16 +259,13 @@ const AssignScheduleToApplicants = () => {
     setSelectedSchoolSemester(event.target.value);
   };
 
-  const [snack, setSnack] = useState({
-    open: false,
-    message: "",
-    severity: "info",
-  });
+  const [snack, setSnack] = useState({ open: false, message: "", severity: "info" });
 
   const handleCloseSnack = (_, reason) => {
     if (reason === "clickaway") return;
-    setSnack((prev) => ({ ...prev, open: false }));
+    setSnack(prev => ({ ...prev, open: false }));
   };
+
 
   useEffect(() => {
     fetchSchedules();
@@ -312,7 +302,7 @@ const AssignScheduleToApplicants = () => {
   useEffect(() => {
     socket.current.on("schedule_updated", ({ schedule_id }) => {
       console.log("📢 Schedule updated:", schedule_id);
-      fetchSchedulesWithCount(); // ✅ always refresh counts
+      fetchSchedulesWithCount();  // ✅ always refresh counts
       fetchAllApplicants();
     });
 
@@ -322,9 +312,7 @@ const AssignScheduleToApplicants = () => {
   // ⬇️ Add this inside ApplicantList component, before useEffect
   const fetchAllApplicants = async () => {
     try {
-      const res = await axios.get(
-        `${API_BASE_URL}/api/verified-ecat-applicants`,
-      );
+      const res = await axios.get(`${API_BASE_URL}/api/verified-ecat-applicants`);
       setPersons(res.data);
     } catch (err) {
       console.error("Error fetching verified ECAT applicants:", err);
@@ -333,6 +321,7 @@ const AssignScheduleToApplicants = () => {
 
   // ================= FUNCTIONS =================
   const [customCount, setCustomCount] = useState(0);
+
 
   // toggleSelectApplicant
   const handleAssignSingle = (id) => {
@@ -345,10 +334,7 @@ const AssignScheduleToApplicants = () => {
       return;
     }
 
-    socket.current.emit("update_schedule", {
-      schedule_id: selectedSchedule,
-      applicant_numbers: [id],
-    });
+    socket.current.emit("update_schedule", { schedule_id: selectedSchedule, applicant_numbers: [id] });
 
     socket.current.once("update_schedule_result", (res) => {
       if (res.success) {
@@ -368,150 +354,104 @@ const AssignScheduleToApplicants = () => {
     });
   };
 
+
   // handleAssign40 (assign max up to room_quota)
   const handleAssign40 = () => {
     if (!selectedSchedule) {
-      setSnack({
-        open: true,
-        message: "Please select a schedule first.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "Please select a schedule first.", severity: "warning" });
       return;
     }
 
-    const schedule = schedules.find((s) => s.schedule_id === selectedSchedule);
+    const schedule = schedules.find(s => s.schedule_id === selectedSchedule);
     if (!schedule) {
-      setSnack({
-        open: true,
-        message: "Selected schedule not found.",
-        severity: "error",
-      });
+      setSnack({ open: true, message: "Selected schedule not found.", severity: "error" });
       return;
     }
 
-    const currentCount = schedule.current_occupancy || 0; // ✅ define it here
-    const maxSlots = schedule.room_quota || 40; // ✅ use DB quota if available
+    const currentCount = schedule.current_occupancy || 0;   // ✅ define it here
+    const maxSlots = schedule.room_quota || 40;             // ✅ use DB quota if available
     const availableSlots = maxSlots - currentCount;
 
     if (availableSlots <= 0) {
-      setSnack({
-        open: true,
-        message: `This schedule is already full (${maxSlots} applicants).`,
-        severity: "error",
-      });
+      setSnack({ open: true, message: `This schedule is already full (${maxSlots} applicants).`, severity: "error" });
       return;
     }
 
     // take as many unassigned as we can up to availableSlots
     const unassigned = persons
-      .filter((a) => a.schedule_id == null)
+      .filter(a => a.schedule_id == null)
       .slice(0, availableSlots)
-      .map((a) => a.applicant_number);
+      .map(a => a.applicant_number);
 
     if (unassigned.length === 0) {
-      setSnack({
-        open: true,
-        message: "No unassigned applicants available.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "No unassigned applicants available.", severity: "warning" });
       return;
     }
 
-    socket.current.emit("update_schedule", {
-      schedule_id: selectedSchedule,
-      applicant_numbers: unassigned,
-    });
+    socket.current.emit("update_schedule", { schedule_id: selectedSchedule, applicant_numbers: unassigned });
 
     socket.current.once("update_schedule_result", (res) => {
       if (res.success) {
         setSnack({
           open: true,
           message: `Assigned: ${res.assigned?.length || 0}, Updated: ${res.updated?.length || 0}, Skipped: ${res.skipped?.length || 0}`,
-          severity: "success",
+          severity: "success"
         });
         fetchAllApplicants();
-        setSchedules((prev) =>
-          prev.map((s) =>
+        setSchedules(prev =>
+          prev.map(s =>
             s.schedule_id === selectedSchedule
-              ? {
-                  ...s,
-                  current_occupancy: currentCount + (res.assigned?.length || 0),
-                }
-              : s,
-          ),
+              ? { ...s, current_occupancy: currentCount + (res.assigned?.length || 0) }
+              : s
+          )
         );
       } else {
-        setSnack({
-          open: true,
-          message: res.error || "Failed to assign applicants.",
-          severity: "error",
-        });
+        setSnack({ open: true, message: res.error || "Failed to assign applicants.", severity: "error" });
       }
     });
   };
 
+
   // handleUnassignImmediate
   const handleUnassignImmediate = async (applicant_number) => {
     try {
-      await axios.post(`${API_BASE_URL}/unassign_schedule`, {
-        applicant_number,
-      });
+      await axios.post(`${API_BASE_URL}/unassign_schedule`, { applicant_number });
 
-      setPersons((prev) =>
-        prev.map((p) =>
+      setPersons(prev =>
+        prev.map(p =>
           p.applicant_number === applicant_number
             ? { ...p, schedule_id: null }
-            : p,
-        ),
+            : p
+        )
       );
 
-      setSelectedApplicants((prev) => {
+      setSelectedApplicants(prev => {
         const newSet = new Set(prev);
         newSet.delete(applicant_number);
         return newSet;
       });
 
-      setSnack({
-        open: true,
-        message: `Applicant ${applicant_number} unassigned successfully.`,
-        severity: "success",
-      });
+      setSnack({ open: true, message: `Applicant ${applicant_number} unassigned successfully.`, severity: "success" });
     } catch (err) {
       console.error("Error unassigning applicant:", err);
-      setSnack({
-        open: true,
-        message: err.response?.data?.error || "Failed to unassign applicant.",
-        severity: "error",
-      });
+      setSnack({ open: true, message: err.response?.data?.error || "Failed to unassign applicant.", severity: "error" });
     }
   };
 
   // handleAssignCustom
   const handleAssignCustom = () => {
     if (!selectedSchedule) {
-      setSnack({
-        open: true,
-        message: "Please select a schedule first.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "Please select a schedule first.", severity: "warning" });
       return;
     }
     if (customCount <= 0) {
-      setSnack({
-        open: true,
-        message: "Please enter a valid number of applicants.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "Please enter a valid number of applicants.", severity: "warning" });
       return;
     }
 
-    const schedule = schedules.find((s) => s.schedule_id === selectedSchedule);
+    const schedule = schedules.find(s => s.schedule_id === selectedSchedule);
     if (!schedule) {
-      setSnack({
-        open: true,
-        message: "Selected schedule not found.",
-        severity: "error",
-      });
+      setSnack({ open: true, message: "Selected schedule not found.", severity: "error" });
       return;
     }
 
@@ -520,59 +460,41 @@ const AssignScheduleToApplicants = () => {
     const availableSlots = maxSlots - currentCount;
 
     if (availableSlots <= 0) {
-      setSnack({
-        open: true,
-        message: `This schedule is already full (${maxSlots} applicants).`,
-        severity: "error",
-      });
+      setSnack({ open: true, message: `This schedule is already full (${maxSlots} applicants).`, severity: "error" });
       return;
     }
 
     const assignCount = Math.min(customCount, availableSlots);
 
     const unassigned = currentPersons
-      .filter((a) => a.schedule_id == null)
+      .filter(a => a.schedule_id == null)
       .slice(0, assignCount)
-      .map((a) => a.applicant_number);
+      .map(a => a.applicant_number);
 
     if (unassigned.length === 0) {
-      setSnack({
-        open: true,
-        message: "No unassigned applicants available.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "No unassigned applicants available.", severity: "warning" });
       return;
     }
 
-    socket.current.emit("update_schedule", {
-      schedule_id: selectedSchedule,
-      applicant_numbers: unassigned,
-    });
+    socket.current.emit("update_schedule", { schedule_id: selectedSchedule, applicant_numbers: unassigned });
 
     socket.current.once("update_schedule_result", (res) => {
       if (res.success) {
         setSnack({
           open: true,
           message: `Assigned: ${res.assigned?.length || 0}, Updated: ${res.updated?.length || 0}, Skipped: ${res.skipped?.length || 0}`,
-          severity: "success",
+          severity: "success"
         });
         fetchAllApplicants();
-        setSchedules((prev) =>
-          prev.map((s) =>
+        setSchedules(prev =>
+          prev.map(s =>
             s.schedule_id === selectedSchedule
-              ? {
-                  ...s,
-                  current_occupancy: currentCount + (res.assigned?.length || 0),
-                }
-              : s,
-          ),
+              ? { ...s, current_occupancy: currentCount + (res.assigned?.length || 0) }
+              : s
+          )
         );
       } else {
-        setSnack({
-          open: true,
-          message: res.error || "Failed to assign applicants.",
-          severity: "error",
-        });
+        setSnack({ open: true, message: res.error || "Failed to assign applicants.", severity: "error" });
       }
     });
   };
@@ -580,42 +502,31 @@ const AssignScheduleToApplicants = () => {
   // handleUnassignAll
   const handleUnassignAll = async () => {
     if (!selectedSchedule) {
-      setSnack({
-        open: true,
-        message: "Please select a schedule first.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "Please select a schedule first.", severity: "warning" });
       return;
     }
 
     try {
-      const res = await axios.post(
-        `${API_BASE_URL}/unassign_all_from_schedule`,
-        { schedule_id: selectedSchedule },
-      );
+      const res = await axios.post(`${API_BASE_URL}/unassign_all_from_schedule`, { schedule_id: selectedSchedule });
       setSnack({ open: true, message: res.data.message, severity: "success" });
 
       fetchAllApplicants();
-      setSchedules((prev) =>
-        prev.map((s) =>
+      setSchedules(prev =>
+        prev.map(s =>
           s.schedule_id === selectedSchedule
             ? { ...s, current_occupancy: 0 }
-            : s,
-        ),
+            : s
+        )
       );
     } catch (err) {
       console.error("Error unassigning all:", err);
-      setSnack({
-        open: true,
-        message:
-          err.response?.data?.error || "Failed to unassign all applicants.",
-        severity: "error",
-      });
+      setSnack({ open: true, message: err.response?.data?.error || "Failed to unassign all applicants.", severity: "error" });
     }
   };
 
   const [emailSubject, setEmailSubject] = useState("Entrance Exam Schedule");
   const [emailMessage, setEmailMessage] = useState("");
+
 
   const handleSendEmails = () => {
     // 1️⃣ Validate schedule selection
@@ -629,7 +540,9 @@ const AssignScheduleToApplicants = () => {
     }
 
     // 2️⃣ Find selected schedule details
-    const sched = schedules.find((s) => s.schedule_id === selectedSchedule);
+    const sched = schedules.find(
+      (s) => s.schedule_id === selectedSchedule
+    );
 
     if (!sched) {
       setSnack({
@@ -659,6 +572,7 @@ const AssignScheduleToApplicants = () => {
       });
     };
 
+
     // 4️⃣ Build DEFAULT EMAIL MESSAGE
     // ⚠️ Applicant fields stay as placeholders
     const defaultMessage = `Hello, {first_name} {middle_name}. {last_name},
@@ -687,31 +601,26 @@ Admission Office`;
     setConfirmOpen(true);
   };
 
+
   const confirmSendEmails = () => {
     setConfirmOpen(false);
     setLoading2(true);
 
     if (!selectedSchedule) {
-      setSnack({
-        open: true,
-        message: "Please select a schedule first.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "Please select a schedule first.", severity: "warning" });
       setLoading2(false);
       return;
     }
 
-    const assignedApplicants = persons
-      .filter((p) => Number(p.schedule_id) === Number(selectedSchedule))
+    const assignedApplicants =
+      persons
+        .filter(p => Number(p.schedule_id) === Number(selectedSchedule))
 
-      .map((p) => p.applicant_number);
+        .map(p => p.applicant_number);
+
 
     if (assignedApplicants.length === 0) {
-      setSnack({
-        open: true,
-        message: "No applicants assigned to this schedule.",
-        severity: "warning",
-      });
+      setSnack({ open: true, message: "No applicants assigned to this schedule.", severity: "warning" });
       setLoading2(false);
       return;
     }
@@ -720,24 +629,18 @@ Admission Office`;
       schedule_id: selectedSchedule,
       user_person_id: localStorage.getItem("person_id"),
 
+
       // ✅ SEND TO BACKEND
       subject: emailSubject,
       message: emailMessage,
     });
 
+
     socket.current.once("send_schedule_emails_result", (res) => {
       if (res.success) {
-        setSnack({
-          open: true,
-          message: "Schedule sent successfully!",
-          severity: "success",
-        });
+        setSnack({ open: true, message: "Schedule sent successfully!", severity: "success" });
       } else {
-        setSnack({
-          open: true,
-          message: res.error || "Failed to send schedule in emails.",
-          severity: "error",
-        });
+        setSnack({ open: true, message: res.error || "Failed to send schedule in emails.", severity: "error" });
       }
       setLoading2(false);
     });
@@ -748,9 +651,7 @@ Admission Office`;
   useEffect(() => {
     const fetchSchedules = async () => {
       try {
-        const res = await axios.get(
-          `${API_BASE_URL}/exam_schedules_with_count`,
-        );
+        const res = await axios.get(`${API_BASE_URL}/exam_schedules_with_count`);
         setSchedules(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Error fetching schedules:", err);
@@ -771,11 +672,13 @@ Admission Office`;
     navigate(`/admin_dashboard1?person_id=${person_id}`);
   };
 
+
   const [itemsPerPage, setItemsPerPage] = useState(100);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [searchError, setSearchError] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+
 
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
@@ -783,11 +686,12 @@ Admission Office`;
 
       try {
         const res = await axios.get(`${API_BASE_URL}/api/search-person`, {
-          params: { query: searchQuery },
+          params: { query: searchQuery }
         });
 
         setSearchError("");
         setSearchResults(res.data);
+
       } catch (err) {
         setSearchError("Applicant not found");
       }
@@ -801,59 +705,47 @@ Admission Office`;
   const [selectedProgramFilter, setSelectedProgramFilter] = useState("");
   const [department, setDepartment] = useState([]);
 
+
+
   // ✅ Step 1: Filtering
   const filteredPersons = persons.filter((personData) => {
     const query = searchQuery.toLowerCase();
-    const fullName =
-      `${personData.first_name ?? ""} ${personData.middle_name ?? ""} ${personData.last_name ?? ""}`.toLowerCase();
+    const fullName = `${personData.first_name ?? ""} ${personData.middle_name ?? ""} ${personData.last_name ?? ""}`.toLowerCase();
 
-    const matchesApplicantID = personData.applicant_number
-      ?.toString()
-      .toLowerCase()
-      .includes(query);
+    const matchesApplicantID = personData.applicant_number?.toString().toLowerCase().includes(query);
     const matchesName = fullName.includes(query);
     const matchesEmail = personData.emailAddress?.toLowerCase().includes(query); // ✅ included
 
     const programInfo = allCurriculums.find(
-      (opt) => opt.curriculum_id?.toString() === personData.program?.toString(),
+      (opt) => opt.curriculum_id?.toString() === personData.program?.toString()
     );
-    const matchesProgramQuery = programInfo?.program_code
-      ?.toLowerCase()
-      .includes(query);
+    const matchesProgramQuery = programInfo?.program_code?.toLowerCase().includes(query);
 
     const matchesDepartment =
-      selectedDepartmentFilter === "" ||
-      programInfo?.dprtmnt_name === selectedDepartmentFilter;
+      selectedDepartmentFilter === "" || programInfo?.dprtmnt_name === selectedDepartmentFilter;
 
     const matchesProgramFilter =
-      selectedProgramFilter === "" ||
-      programInfo?.program_code === selectedProgramFilter;
+      selectedProgramFilter === "" || programInfo?.program_code === selectedProgramFilter;
 
     const applicantAppliedYear = new Date(personData.created_at).getFullYear();
-    const schoolYear = schoolYears.find(
-      (sy) => sy.year_id === selectedSchoolYear,
-    );
+    const schoolYear = schoolYears.find((sy) => sy.year_id === selectedSchoolYear);
 
     const matchesSchoolYear =
-      selectedSchoolYear === "" ||
-      (schoolYear &&
-        String(applicantAppliedYear) === String(schoolYear.current_year));
+      selectedSchoolYear === "" || (schoolYear && (String(applicantAppliedYear) === String(schoolYear.current_year)))
 
     const matchesSemester =
-      selectedSchoolSemester === "" ||
-      String(personData.middle_code) === String(selectedSchoolSemester);
+      selectedSchoolSemester === "" || String(personData.middle_code) === String(selectedSchoolSemester);
+
 
     return (
-      (matchesApplicantID ||
-        matchesName ||
-        matchesEmail ||
-        matchesProgramQuery) &&
+      (matchesApplicantID || matchesName || matchesEmail || matchesProgramQuery) &&
       matchesDepartment &&
       matchesProgramFilter &&
       matchesSchoolYear &&
       matchesSemester
     );
   });
+
 
   const sortedPersons = [...filteredPersons].sort((a, b) => {
     let valueA, valueB;
@@ -891,6 +783,7 @@ Admission Office`;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentPersons = sortedPersons.slice(indexOfFirstItem, indexOfLastItem);
 
+
   useEffect(() => {
     const fetchDepartments = async () => {
       try {
@@ -903,6 +796,11 @@ Admission Office`;
 
     fetchDepartments();
   }, []);
+
+
+
+
+
 
   const maxButtonsToShow = 5;
   let startPage = Math.max(1, currentPage - Math.floor(maxButtonsToShow / 2));
@@ -941,42 +839,38 @@ Admission Office`;
   //   }
   // });
 
-  // Put this at the very bottom before the return
+
+  // Put this at the very bottom before the return 
   if (loading || hasAccess === null) {
     return <LoadingOverlay open={loading} message="Loading..." />;
   }
 
   if (!hasAccess) {
-    return <Unauthorized />;
+    return (
+      <Unauthorized />
+    );
   }
 
+
   return (
-    <Box
-      sx={{
-        height: "calc(100vh - 150px)",
-        overflowY: "auto",
-        paddingRight: 1,
-        backgroundColor: "transparent",
-        mt: 1,
-        padding: 2,
-      }}
-    >
+    <Box sx={{ height: "calc(100vh - 150px)", overflowY: "auto", paddingRight: 1, backgroundColor: "transparent", mt: 1, padding: 2 }}>
       <Box
         sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
 
           mb: 2,
+
         }}
       >
         <Typography
           variant="h4"
           sx={{
-            fontWeight: "bold",
+            fontWeight: 'bold',
             color: titleColor,
-            fontSize: "36px",
+            fontSize: '36px',
           }}
         >
           ENTRANCE EXAM SCHEDULE MANAGEMENT
@@ -986,11 +880,13 @@ Admission Office`;
           variant="outlined"
           placeholder="Search Applicant Name / Email / Applicant ID"
           size="small"
+
           value={searchQuery}
           onChange={(e) => {
             setSearchQuery(e.target.value);
             setCurrentPage(1); // Corrected
           }}
+
           sx={{
             width: 450,
             backgroundColor: "#fff",
@@ -1003,6 +899,8 @@ Admission Office`;
             startAdornment: <SearchIcon sx={{ mr: 1, color: "gray" }} />,
           }}
         />
+
+
       </Box>
       <hr style={{ border: "1px solid #ccc", width: "100%" }} />
 
@@ -1030,10 +928,7 @@ Admission Office`;
               cursor: "pointer",
               borderRadius: 2,
               border: `2px solid ${borderColor}`,
-              backgroundColor:
-                activeStep === index
-                  ? settings?.header_color || "#1976d2"
-                  : "#E8C999",
+              backgroundColor: activeStep === index ? settings?.header_color || "#1976d2" : "#E8C999",
               color: activeStep === index ? "#fff" : "#000",
               boxShadow:
                 activeStep === index
@@ -1045,17 +940,9 @@ Admission Office`;
               },
             }}
           >
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-              }}
-            >
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
               <Box sx={{ fontSize: 40, mb: 1 }}>{tab.icon}</Box>
-              <Typography
-                sx={{ fontSize: 14, fontWeight: "bold", textAlign: "center" }}
-              >
+              <Typography sx={{ fontSize: 14, fontWeight: "bold", textAlign: "center" }}>
                 {tab.label}
               </Typography>
             </Box>
@@ -1065,18 +952,12 @@ Admission Office`;
 
       <div style={{ height: "40px" }}></div>
 
-      <TableContainer
-        component={Paper}
-        sx={{ width: "100%", border: `2px solid ${borderColor}` }}
-      >
+
+      <TableContainer component={Paper} sx={{ width: '100%', border: `2px solid ${borderColor}`, }}>
         <Table>
-          <TableHead
-            sx={{ backgroundColor: settings?.header_color || "#1976d2" }}
-          >
+          <TableHead sx={{ backgroundColor: settings?.header_color || "#1976d2" }}>
             <TableRow>
-              <TableCell sx={{ color: "white", textAlign: "Center" }}>
-                Entrance Exam Schedule Management
-              </TableCell>
+              <TableCell sx={{ color: 'white', textAlign: "Center" }}>Entrance Exam Schedule Management</TableCell>
             </TableRow>
           </TableHead>
         </Table>
@@ -1090,9 +971,11 @@ Admission Office`;
           border: `2px solid ${borderColor}`,
           bgcolor: "white",
           boxShadow: "0 3px 12px rgba(0,0,0,0.1)",
+
         }}
       >
-        <Box>
+        <Box >
+
           <Grid container spacing={2} sx={{ mb: 2 }}>
             {/* Select Schedule */}
             <Grid item xs={12} md={3}>
@@ -1116,35 +999,29 @@ Admission Office`;
 
                 {[...schedules]
                   // ✅ REMOVE FULL ROOMS HERE
-                  .filter(
-                    (s) => Number(s.current_occupancy) < Number(s.room_quota),
-                  )
-                  .sort(
-                    (a, b) => new Date(b.created_at) - new Date(a.created_at),
-                  )
+                  .filter(s => Number(s.current_occupancy) < Number(s.room_quota))
+                  .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
                   .map((s) => (
-                    <MenuItem key={s.schedule_id} value={s.schedule_id}>
-                      {s.proctor} - {s.day_description} |{" "}
-                      {s.building_description} | {s.room_description} |{" "}
-                      {new Date(
-                        `1970-01-01T${s.start_time}`,
-                      ).toLocaleTimeString("en-US", {
+                    <MenuItem
+                      key={s.schedule_id}
+                      value={s.schedule_id}
+                    >
+                      {s.proctor} - {s.day_description} | {s.building_description} | {s.room_description} |{" "}
+                      {new Date(`1970-01-01T${s.start_time}`).toLocaleTimeString("en-US", {
                         hour: "numeric",
                         minute: "2-digit",
                         hour12: true,
                       })}{" "}
                       -{" "}
-                      {new Date(`1970-01-01T${s.end_time}`).toLocaleTimeString(
-                        "en-US",
-                        {
-                          hour: "numeric",
-                          minute: "2-digit",
-                          hour12: true,
-                        },
-                      )}
+                      {new Date(`1970-01-01T${s.end_time}`).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      })}
                     </MenuItem>
                   ))}
               </TextField>
+
             </Grid>
 
             {/* Proctor */}
@@ -1156,8 +1033,7 @@ Admission Office`;
                 fullWidth
                 value={
                   selectedSchedule
-                    ? schedules.find((s) => s.schedule_id === selectedSchedule)
-                        ?.proctor || "Not assigned"
+                    ? schedules.find((s) => s.schedule_id === selectedSchedule)?.proctor || "Not assigned"
                     : ""
                 }
                 InputProps={{ readOnly: true }}
@@ -1180,8 +1056,7 @@ Admission Office`;
                 fullWidth
                 value={
                   selectedSchedule
-                    ? schedules.find((s) => s.schedule_id === selectedSchedule)
-                        ?.room_quota || "N/A"
+                    ? schedules.find((s) => s.schedule_id === selectedSchedule)?.room_quota || "N/A"
                     : ""
                 }
                 InputProps={{ readOnly: true }}
@@ -1205,13 +1080,9 @@ Admission Office`;
                 value={
                   selectedSchedule
                     ? (() => {
-                        const s = schedules.find(
-                          (x) => x.schedule_id === selectedSchedule,
-                        );
-                        return s
-                          ? `${s.current_occupancy}/${s.room_quota}`
-                          : "";
-                      })()
+                      const s = schedules.find((x) => x.schedule_id === selectedSchedule);
+                      return s ? `${s.current_occupancy}/${s.room_quota}` : "";
+                    })()
                     : ""
                 }
                 InputProps={{ readOnly: true }}
@@ -1225,22 +1096,15 @@ Admission Office`;
               />
             </Grid>
           </Grid>
+
         </Box>
         {/* === ROW 1: Sort + Buttons === */}
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={2}
-        >
+        <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
           {/* LEFT SIDE: Sort By + Sort Order */}
           <Box display="flex" alignItems="center" gap={2}>
             {/* Sort By */}
             <Box display="flex" alignItems="center" gap={1} marginLeft={-4}>
-              <Typography
-                fontSize={13}
-                sx={{ minWidth: "80px", textAlign: "right" }}
-              >
+              <Typography fontSize={13} sx={{ minWidth: "80px", textAlign: "right" }}>
                 Sort By:
               </Typography>
               <FormControl size="small" sx={{ width: "200px" }}>
@@ -1257,10 +1121,7 @@ Admission Office`;
 
             {/* Sort Order */}
             <Box display="flex" alignItems="center" gap={1}>
-              <Typography
-                fontSize={13}
-                sx={{ minWidth: "80px", textAlign: "right" }}
-              >
+              <Typography fontSize={13} sx={{ minWidth: "80px", textAlign: "right" }}>
                 Sort Order:
               </Typography>
               <FormControl size="small" sx={{ width: "150px" }}>
@@ -1275,7 +1136,9 @@ Admission Office`;
             </Box>
           </Box>
 
+
           <Box display="flex" alignItems="center" gap={2}>
+
             {/* NEW Cancel Button BEFORE Assign Max */}
             {/* <Button
               variant="contained"
@@ -1350,16 +1213,16 @@ Admission Office`;
             >
               Send Emails
             </Button>
+
           </Box>
+
         </Box>
 
         {/* === Filters Row: Department + Program + School Year + Semester === */}
         <Box display="flex" alignItems="center" gap={3} mb={2} flexWrap="wrap">
           {/* Department Filter */}
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography fontSize={13} sx={{ minWidth: "70px" }}>
-              Department:
-            </Typography>
+            <Typography fontSize={13} sx={{ minWidth: "70px" }}>Department:</Typography>
             <FormControl size="small" sx={{ width: "250px" }}>
               <Select
                 value={selectedDepartmentFilter}
@@ -1382,9 +1245,7 @@ Admission Office`;
 
           {/* Program Filter */}
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography fontSize={13} sx={{ minWidth: "60px" }}>
-              Program:
-            </Typography>
+            <Typography fontSize={13} sx={{ minWidth: "60px" }}>Program:</Typography>
             <FormControl size="small" sx={{ width: "250px" }}>
               <Select
                 value={selectedProgramFilter}
@@ -1403,9 +1264,7 @@ Admission Office`;
 
           {/* School Year Filter */}
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography fontSize={13} sx={{ minWidth: "80px" }}>
-              School Year:
-            </Typography>
+            <Typography fontSize={13} sx={{ minWidth: "80px" }}>School Year:</Typography>
             <FormControl size="small" sx={{ width: "180px" }}>
               <Select
                 value={selectedSchoolYear}
@@ -1427,9 +1286,7 @@ Admission Office`;
 
           {/* Semester Filter */}
           <Box display="flex" alignItems="center" gap={1}>
-            <Typography fontSize={13} sx={{ minWidth: "70px" }}>
-              Semester:
-            </Typography>
+            <Typography fontSize={13} sx={{ minWidth: "70px" }}>Semester:</Typography>
             <FormControl size="small" sx={{ width: "180px" }}>
               <Select
                 value={selectedSchoolSemester}
@@ -1449,31 +1306,24 @@ Admission Office`;
             </FormControl>
           </Box>
         </Box>
+
+
+
+
       </Paper>
 
-      <TableContainer component={Paper} sx={{ width: "100%" }}>
+      <TableContainer component={Paper} sx={{ width: '100%', }}>
         <Table size="small">
-          <TableHead
-            sx={{
-              backgroundColor: settings?.header_color || "#1976d2",
-              color: "white",
-            }}
-          >
+          <TableHead sx={{
+            backgroundColor: settings?.header_color || "#1976d2",
+            color: "white"
+          }}>
             <TableRow>
-              <TableCell
-                colSpan={10}
-                sx={{
-                  border: `2px solid ${borderColor}`,
-                  py: 0.5,
-                  backgroundColor: settings?.header_color || "#1976d2",
-                  color: "white",
-                }}
-              >
-                <Box
-                  display="flex"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
+              <TableCell colSpan={10} sx={{
+                border: `2px solid ${borderColor}`, py: 0.5, backgroundColor: settings?.header_color || "#1976d2",
+                color: "white"
+              }}>
+                <Box display="flex" justifyContent="space-between" alignItems="center">
                   {/* Left: Total Count */}
                   <Typography fontSize="14px" fontWeight="bold" color="white">
                     Total Applicants: {filteredPersons.length}
@@ -1492,25 +1342,23 @@ Admission Office`;
                         color: "white",
                         borderColor: "white",
                         backgroundColor: "transparent",
-                        "&:hover": {
-                          borderColor: "white",
-                          backgroundColor: "rgba(255,255,255,0.1)",
+                        '&:hover': {
+                          borderColor: 'white',
+                          backgroundColor: 'rgba(255,255,255,0.1)',
                         },
-                        "&.Mui-disabled": {
+                        '&.Mui-disabled': {
                           color: "white",
                           borderColor: "white",
                           backgroundColor: "transparent",
                           opacity: 1,
-                        },
+                        }
                       }}
                     >
                       First
                     </Button>
 
                     <Button
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.max(prev - 1, 1))
-                      }
+                      onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
                       disabled={currentPage === 1}
                       variant="outlined"
                       size="small"
@@ -1519,20 +1367,21 @@ Admission Office`;
                         color: "white",
                         borderColor: "white",
                         backgroundColor: "transparent",
-                        "&:hover": {
-                          borderColor: "white",
-                          backgroundColor: "rgba(255,255,255,0.1)",
+                        '&:hover': {
+                          borderColor: 'white',
+                          backgroundColor: 'rgba(255,255,255,0.1)',
                         },
-                        "&.Mui-disabled": {
+                        '&.Mui-disabled': {
                           color: "white",
                           borderColor: "white",
                           backgroundColor: "transparent",
                           opacity: 1,
-                        },
+                        }
                       }}
                     >
                       Prev
                     </Button>
+
 
                     {/* Page Dropdown */}
                     <FormControl size="small" sx={{ minWidth: 80 }}>
@@ -1541,31 +1390,31 @@ Admission Office`;
                         onChange={(e) => setCurrentPage(Number(e.target.value))}
                         displayEmpty
                         sx={{
-                          fontSize: "12px",
+                          fontSize: '12px',
                           height: 36,
-                          color: "white",
-                          border: "1px solid white",
-                          backgroundColor: "transparent",
-                          ".MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
+                          color: 'white',
+                          border: '1px solid white',
+                          backgroundColor: 'transparent',
+                          '.MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
                           },
-                          "&:hover .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
+                          '&:hover .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
                           },
-                          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                            borderColor: "white",
+                          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                            borderColor: 'white',
                           },
-                          "& svg": {
-                            color: "white", // dropdown arrow icon color
-                          },
+                          '& svg': {
+                            color: 'white', // dropdown arrow icon color
+                          }
                         }}
                         MenuProps={{
                           PaperProps: {
                             sx: {
                               maxHeight: 200,
-                              backgroundColor: "#fff", // dropdown background
-                            },
-                          },
+                              backgroundColor: '#fff', // dropdown background
+                            }
+                          }
                         }}
                       >
                         {Array.from({ length: totalPages }, (_, i) => (
@@ -1577,14 +1426,13 @@ Admission Office`;
                     </FormControl>
 
                     <Typography fontSize="11px" color="white">
-                      of {totalPages} page{totalPages > 1 ? "s" : ""}
+                      of {totalPages} page{totalPages > 1 ? 's' : ''}
                     </Typography>
+
 
                     {/* Next & Last */}
                     <Button
-                      onClick={() =>
-                        setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                      }
+                      onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
                       disabled={currentPage === totalPages}
                       variant="outlined"
                       size="small"
@@ -1593,16 +1441,16 @@ Admission Office`;
                         color: "white",
                         borderColor: "white",
                         backgroundColor: "transparent",
-                        "&:hover": {
-                          borderColor: "white",
-                          backgroundColor: "rgba(255,255,255,0.1)",
+                        '&:hover': {
+                          borderColor: 'white',
+                          backgroundColor: 'rgba(255,255,255,0.1)',
                         },
-                        "&.Mui-disabled": {
+                        '&.Mui-disabled': {
                           color: "white",
                           borderColor: "white",
                           backgroundColor: "transparent",
                           opacity: 1,
-                        },
+                        }
                       }}
                     >
                       Next
@@ -1618,16 +1466,16 @@ Admission Office`;
                         color: "white",
                         borderColor: "white",
                         backgroundColor: "transparent",
-                        "&:hover": {
-                          borderColor: "white",
-                          backgroundColor: "rgba(255,255,255,0.1)",
+                        '&:hover': {
+                          borderColor: 'white',
+                          backgroundColor: 'rgba(255,255,255,0.1)',
                         },
-                        "&.Mui-disabled": {
+                        '&.Mui-disabled': {
                           color: "white",
                           borderColor: "white",
                           backgroundColor: "transparent",
                           opacity: 1,
-                        },
+                        }
                       }}
                     >
                       Last
@@ -1640,90 +1488,17 @@ Admission Office`;
         </Table>
       </TableContainer>
 
-      <TableContainer
-        component={Paper}
-        sx={{ width: "100%", border: `2px solid ${borderColor}` }}
-      >
+      <TableContainer component={Paper} sx={{ width: "100%", border: `2px solid ${borderColor}` }}>
         <Table size="small">
-          <TableHead sx={{ backgroundColor: "#F1F1F1" }}>
+          <TableHead sx={{ backgroundColor: "#F1F1F1", }}>
             <TableRow>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                #
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Applicant ID
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Name
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Program
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Email Address
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Date Applied
-              </TableCell>
-              <TableCell
-                sx={{
-                  color: "white",
-                  textAlign: "center",
-                  fontSize: "12px",
-                  color: "maroon",
-                  border: `2px solid ${borderColor}`,
-                }}
-              >
-                Action
-              </TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>#</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Applicant ID</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Name</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Program</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Email Address</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Date Applied</TableCell>
+              <TableCell sx={{ color: "white", textAlign: "center", fontSize: "12px", color: "maroon", border: `2px solid ${borderColor}` }}>Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -1742,13 +1517,7 @@ Admission Office`;
                 return (
                   <TableRow key={person.person_id}>
                     {/* Auto-increment # */}
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        border: `2px solid ${borderColor}`,
-                        fontSize: "12px",
-                      }}
-                    >
+                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, fontSize: "12px" }}>
                       {indexOfFirstItem + index + 1}
                     </TableCell>
 
@@ -1783,38 +1552,21 @@ Admission Office`;
                       {`${person.last_name}, ${person.first_name} ${person.middle_name ?? ""} ${person.extension ?? ""}`}
                     </TableCell>
 
+
                     {/* Program */}
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        border: `2px solid ${borderColor}`,
-                        fontSize: "12px",
-                      }}
-                    >
+                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, fontSize: "12px" }}>
                       {curriculumOptions.find(
-                        (item) =>
-                          item.curriculum_id?.toString() ===
-                          person.program?.toString(),
+                        (item) => item.curriculum_id?.toString() === person.program?.toString()
                       )?.program_code ?? "N/A"}
                     </TableCell>
 
                     {/* Email */}
-                    <TableCell
-                      sx={{
-                        textAlign: "center",
-                        border: `2px solid ${borderColor}`,
-                        fontSize: "12px",
-                      }}
-                    >
+                    <TableCell sx={{ textAlign: "center", border: `2px solid ${borderColor}`, fontSize: "12px" }}>
                       {person.emailAddress ?? "N/A"}
                     </TableCell>
 
                     <TableCell
-                      sx={{
-                        textAlign: "center",
-                        border: `2px solid ${borderColor}`,
-                        fontSize: "12px",
-                      }}
+                      sx={{ textAlign: "center", border: `2px solid ${borderColor}`, fontSize: "12px" }}
                     >
                       {(() => {
                         if (!person.created_at) return "";
@@ -1864,6 +1616,7 @@ Admission Office`;
                             color="primary"
                             size="small"
                             onClick={() => {
+
                               if (!selectedSchedule) {
                                 setSnack({
                                   open: true,
@@ -1874,7 +1627,7 @@ Admission Office`;
                               }
 
                               const sched = schedules.find(
-                                (s) => s.schedule_id === selectedSchedule,
+                                (s) => s.schedule_id === selectedSchedule
                               );
 
                               if (!sched) {
@@ -1906,10 +1659,7 @@ Admission Office`;
                               };
 
                               setEmailMessage(
-                                `Hello, ${person.first_name} ${
-                                  person.middle_name
-                                    ? person.middle_name.charAt(0) + "."
-                                    : ""
+                                `Hello, ${person.first_name} ${person.middle_name ? person.middle_name.charAt(0) + "." : ""
                                 } ${person.last_name}
 
 You have been assigned to the following entrance exam schedule:
@@ -1929,26 +1679,34 @@ This printed permit must be presented to your proctor on the exam day to verify 
 
 Thank you and good luck!
 
-Admission Office`,
-                              );
+Admission Office`);
 
                               setConfirmOpen(true);
                             }}
                           >
                             Send Email
                           </Button>
+
+
+
                         </Box>
                       )}
                     </TableCell>
+
                   </TableRow>
                 );
               })
             )}
           </TableBody>
+
+
+
         </Table>
       </TableContainer>
 
       <br />
+
+
 
       <Snackbar
         open={snack.open}
@@ -1956,14 +1714,14 @@ Admission Office`,
         onClose={handleCloseSnack}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
       >
-        <Alert
-          severity={snack.severity}
-          onClose={handleCloseSnack}
-          sx={{ width: "100%" }}
-        >
+        <Alert severity={snack.severity} onClose={handleCloseSnack} sx={{ width: "100%" }}>
           {snack.message}
         </Alert>
       </Snackbar>
+
+
+
+
 
       {/* Edit & Send Email Dialog */}
       <Dialog
@@ -1977,6 +1735,9 @@ Admission Office`,
         </DialogTitle>
 
         <DialogContent dividers sx={{ p: 3 }}>
+
+
+
           {/* Subject */}
           <TextField
             label="Email Subject"
@@ -2009,9 +1770,11 @@ Admission Office`,
             🔑 Available placeholders:
             {` {first_name}, {last_name}, {applicant_number}, {day}, {room}, {start_time}, {end_time}, {office} `}
           </Typography>
+
         </DialogContent>
 
         <DialogActions sx={{ p: 2, justifyContent: "space-between" }}>
+
           <Button
             onClick={() => setConfirmOpen(false)}
             color="error"
@@ -2028,13 +1791,11 @@ Admission Office`,
           >
             Send Emails
           </Button>
+
         </DialogActions>
       </Dialog>
 
-      <LoadingOverlay
-        open={loading2}
-        message="Sending emails, please wait..."
-      />
+      <LoadingOverlay open={loading2} message="Sending emails, please wait..." />
     </Box>
   );
 };
